@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JobPortal - Find Your Dream Job</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #3b82f6;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-700: #374151;
+    --gray-900: #111827;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+  body { background:var(--gray-50); color:var(--gray-900); line-height:1.6; }
+  .page { display:none; animation:fadeIn 0.3s ease-in-out; }
+  .page.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .nav-link { position:relative; transition:all 0.2s ease; cursor:pointer; }
+  .nav-link:after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--primary); transition:width 0.3s ease; }
+  .nav-link:hover:after, .nav-link.active:after { width:100%; }
+  .card { background:white; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.1); transition:all 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .card:hover { box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05); transform:translateY(-2px); }
+  .btn-primary { background:var(--primary); color:white; transition:all 0.2s ease; border:none; cursor:pointer; }
+  .btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); box-shadow:0 4px 6px -1px rgba(37,99,235,0.3); }
+  .btn-outline { border:2px solid var(--primary); color:var(--primary); background:transparent; transition:all 0.2s ease; cursor:pointer; }
+  .btn-outline:hover { background:var(--primary); color:white; }
+  .tag { background:#dbeafe; color:var(--primary-dark); padding:4px 12px; border-radius:20px; font-size:0.875rem; font-weight:500; }
+  .form-input { width:100%; padding:0.75rem 1rem; border:2px solid #e5e7eb; border-radius:8px; transition:all 0.2s ease; font-size:1rem; }
+  .form-input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+  .hero-gradient { background:linear-gradient(135deg,#2563eb 0%,#3b82f6 50%,#60a5fa 100%); }
+  .badge-success { background:#d1fae5; color:#065f46; }
+  .badge-warning { background:#fef3c7; color:#92400e; }
+  .badge-danger { background:#fee2e2; color:#991b1b; }
+  .mobile-menu { display:none; }
+  .mobile-menu.active { display:block; }
+  @media(max-width:768px){ .desktop-menu{ display:none; } }
+</style>
+</head>
+<body>
+ 
+<!-- Navigation Bar -->
+<nav class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+          <div class="w-10 h-10 rounded-lg hero-gradient flex items-center justify-center">
+            <i class="fas fa-briefcase text-white text-xl"></i>
+          </div>
+          <span class="text-2xl font-bold text-gray-900">Job<span class="text-blue-600">Portal</span></span>
+        </div>
+        <div class="desktop-menu hidden md:flex gap-6">
+          <a class="nav-link text-gray-700 font-medium pb-1 active" data-page="home" onclick="showPage('home')">Home</a>
+          <a class="nav-link text-gray-700 font-medium pb-1" data-page="jobs" onclick="showPage('jobs')">Jobs</a>
+          <a class="nav-link text-gray-700 font-medium pb-1" data-page="applications" onclick="showPage('applications')">Applications</a>
+          <a class="nav-link text-gray-700 font-medium pb-1" data-page="profile" onclick="showPage('profile')">Profile</a>
+          <a class="nav-link text-gray-700 font-medium pb-1" data-page="settings" onclick="showPage('settings')">Settings</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="desktop-menu hidden md:block btn-outline px-5 py-2 rounded-lg font-medium" onclick="showPage('login')">Log In</button>
+        <button class="btn-primary px-5 py-2 rounded-lg font-medium" onclick="showPage('register')">Sign Up</button>
+        <button class="md:hidden" onclick="toggleMobileMenu()">
+          <i class="fas fa-bars text-2xl text-gray-700"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu md:hidden pb-4">
+      <a class="block py-2 text-gray-700 font-medium" onclick="showPage('home');toggleMobileMenu()">Home</a>
+      <a class="block py-2 text-gray-700 font-medium" onclick="showPage('jobs');toggleMobileMenu()">Jobs</a>
+      <a class="block py-2 text-gray-700 font-medium" onclick="showPage('applications');toggleMobileMenu()">Applications</a>
+      <a class="block py-2 text-gray-700 font-medium" onclick="showPage('profile');toggleMobileMenu()">Profile</a>
+      <a class="block py-2 text-gray-700 font-medium" onclick="showPage('settings');toggleMobileMenu()">Settings</a>
+      <a class="block py-2 text-gray-700 font-medium" onclick="showPage('login');toggleMobileMenu()">Log In</a>
+    </div>
+  </div>
+</nav>
+ 
+<!-- PAGE: HOME -->
+<div id="home" class="page active">
+  <section class="hero-gradient text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">Find Your Dream Job Today</h1>
+          <p class="text-xl text-blue-100 mb-8">Connect with 10,000+ companies and discover opportunities that match your skills and aspirations.</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition" onclick="showPage('jobs')">Browse Jobs <i class="fas fa-arrow-right ml-2"></i></button>
+            <button class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition" onclick="showPage('register')">Post a Job</button>
+          </div>
+        </div>
+        <!-- FIX: Hero card closing tags were broken -->
+        <div class="hidden md:block">
+          <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center">
+                <i class="fas fa-search text-blue-600 text-xl"></i>
+              </div>
+              <div>
+                <div class="font-semibold text-lg">Quick Search</div>
+                <div class="text-blue-100 text-sm">Find jobs instantly</div>
+              </div>
+            </div>
+            <form onsubmit="event.preventDefault(); showPage('jobs')">
+              <input type="text" placeholder="Job title, keywords..." class="form-input mb-3 text-gray-900" />
+              <input type="text" placeholder="Location" class="form-input mb-4 text-gray-900" />
+              <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold">Search Jobs</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center"><div class="text-4xl font-bold text-blue-600 mb-2">50K+</div><div class="text-gray-600">Active Jobs</div></div>
+        <div class="text-center"><div class="text-4xl font-bold text-blue-600 mb-2">10K+</div><div class="text-gray-600">Companies</div></div>
+        <div class="text-center"><div class="text-4xl font-bold text-blue-600 mb-2">200K+</div><div class="text-gray-600">Job Seekers</div></div>
+        <div class="text-center"><div class="text-4xl font-bold text-blue-600 mb-2">95%</div><div class="text-gray-600">Success Rate</div></div>
+      </div>
+    </div>
+  </section>
+ 
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center mb-10">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Featured Jobs</h2>
+          <p class="text-gray-600">Explore top opportunities from leading companies</p>
+        </div>
+        <button class="text-blue-600 font-semibold hover:text-blue-700" onclick="showPage('jobs')">View All <i class="fas fa-arrow-right ml-1"></i></button>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card p-6 cursor-pointer" onclick="showPage('job-details')">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-google text-blue-600 text-2xl"></i></div>
+            <div class="flex-1"><h3 class="font-bold text-lg text-gray-900 mb-1">Senior Product Designer</h3><p class="text-gray-600 text-sm">Google Inc.</p></div>
+            <i class="far fa-bookmark text-gray-400 hover:text-blue-600"></i>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-4"><span class="tag">Full-time</span><span class="tag">Remote</span><span class="tag">Senior</span></div>
+          <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+            <span><i class="fas fa-map-marker-alt mr-1"></i> San Francisco, CA</span>
+            <span><i class="far fa-clock mr-1"></i> 2 days ago</span>
+          </div>
+          <div class="flex items-center justify-between"><span class="text-2xl font-bold text-gray-900">$120K - $180K</span><button class="text-blue-600 font-semibold">View Details</button></div>
+        </div>
+        <div class="card p-6 cursor-pointer" onclick="showPage('job-details')">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-microsoft text-purple-600 text-2xl"></i></div>
+            <div class="flex-1"><h3 class="font-bold text-lg text-gray-900 mb-1">Frontend Developer</h3><p class="text-gray-600 text-sm">Microsoft</p></div>
+            <i class="far fa-bookmark text-gray-400 hover:text-blue-600"></i>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-4"><span class="tag">Full-time</span><span class="tag">Hybrid</span><span class="tag">Mid-level</span></div>
+          <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+            <span><i class="fas fa-map-marker-alt mr-1"></i> Seattle, WA</span>
+            <span><i class="far fa-clock mr-1"></i> 5 days ago</span>
+          </div>
+          <div class="flex items-center justify-between"><span class="text-2xl font-bold text-gray-900">$90K - $140K</span><button class="text-blue-600 font-semibold">View Details</button></div>
+        </div>
+        <div class="card p-6 cursor-pointer" onclick="showPage('job-details')">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-spotify text-green-600 text-2xl"></i></div>
+            <div class="flex-1"><h3 class="font-bold text-lg text-gray-900 mb-1">Data Scientist</h3><p class="text-gray-600 text-sm">Spotify</p></div>
+            <i class="far fa-bookmark text-gray-400 hover:text-blue-600"></i>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-4"><span class="tag">Full-time</span><span class="tag">On-site</span><span class="tag">Expert</span></div>
+          <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+            <span><i class="fas fa-map-marker-alt mr-1"></i> New York, NY</span>
+            <span><i class="far fa-clock mr-1"></i> 1 week ago</span>
+          </div>
+          <div class="flex items-center justify-between"><span class="text-2xl font-bold text-gray-900">$130K - $200K</span><button class="text-blue-600 font-semibold">View Details</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+ 
+<!-- PAGE: LOGIN -->
+<div id="login" class="page">
+  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4">
+    <div class="max-w-md w-full">
+      <div class="card p-8">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 hero-gradient rounded-xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-user text-white text-2xl"></i></div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+          <p class="text-gray-600">Log in to access your account</p>
+        </div>
+        <form onsubmit="event.preventDefault(); showPage('profile')">
+          <div class="mb-5"><label class="block text-gray-700 font-medium mb-2">Email Address</label><input type="email" class="form-input" placeholder="you@example.com" required></div>
+          <div class="mb-5"><label class="block text-gray-700 font-medium mb-2">Password</label><input type="password" class="form-input" placeholder="••••••••" required></div>
+          <div class="flex items-center justify-between mb-6">
+            <label class="flex items-center"><input type="checkbox" class="w-4 h-4 text-blue-600 rounded"><span class="ml-2 text-sm text-gray-600">Remember me</span></label>
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold mb-4">Log In</button>
+          <p class="text-center text-gray-600 text-sm">Don't have an account? <a class="text-blue-600 hover:text-blue-700 font-semibold cursor-pointer" onclick="showPage('register')">Sign up</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: REGISTER -->
+<div id="register" class="page">
+  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4">
+    <div class="max-w-md w-full">
+      <div class="card p-8">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 hero-gradient rounded-xl flex items-center justify-center mx-auto mb-4"><i class="fas fa-user-plus text-white text-2xl"></i></div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
+          <p class="text-gray-600">Join thousands of job seekers today</p>
+        </div>
+        <form onsubmit="event.preventDefault(); showPage('profile')">
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div><label class="block text-gray-700 font-medium mb-2">First Name</label><input type="text" class="form-input" placeholder="John" required></div>
+            <div><label class="block text-gray-700 font-medium mb-2">Last Name</label><input type="text" class="form-input" placeholder="Doe" required></div>
+          </div>
+          <div class="mb-5"><label class="block text-gray-700 font-medium mb-2">Email Address</label><input type="email" class="form-input" placeholder="you@example.com" required></div>
+          <div class="mb-5"><label class="block text-gray-700 font-medium mb-2">Password</label><input type="password" class="form-input" placeholder="••••••••" required></div>
+          <div class="mb-6">
+            <label class="flex items-start"><input type="checkbox" class="w-4 h-4 text-blue-600 rounded mt-1" required><span class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-blue-600">Terms of Service</a> and <a href="#" class="text-blue-600">Privacy Policy</a></span></label>
+          </div>
+          <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold mb-4">Create Account</button>
+          <p class="text-center text-gray-600 text-sm">Already have an account? <a class="text-blue-600 hover:text-blue-700 font-semibold cursor-pointer" onclick="showPage('login')">Log in</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: JOBS -->
+<div id="jobs" class="page">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6"><h1 class="text-3xl font-bold text-gray-900 mb-2">Browse Jobs</h1><p class="text-gray-600">Find the perfect opportunity for you</p></div>
+    <div class="card p-6 mb-8">
+      <div class="grid md:grid-cols-4 gap-4">
+        <input type="text" placeholder="Job title or keyword" class="form-input">
+        <input type="text" placeholder="Location" class="form-input">
+        <select class="form-input"><option>All Job Types</option><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Remote</option></select>
+        <button class="btn-primary py-3 rounded-lg font-semibold"><i class="fas fa-search mr-2"></i> Search</button>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1">
+        <div class="card p-6 sticky top-20">
+          <h3 class="font-bold text-lg mb-4">Filters</h3>
+          <div class="mb-6">
+            <h4 class="font-semibold mb-3 text-gray-700">Experience Level</h4>
+            <label class="flex items-center mb-2"><input type="checkbox" class="w-4 h-4 text-blue-600 rounded"><span class="ml-2 text-gray-600">Entry Level</span></label>
+            <label class="flex items-center mb-2"><input type="checkbox" class="w-4 h-4 text-blue-600 rounded"><span class="ml-2 text-gray-600">Mid Level</span></label>
+            <label class="flex items-center mb-2"><input type="checkbox" class="w-4 h-4 text-blue-600 rounded"><span class="ml-2 text-gray-600">Senior Level</span></label>
+          </div>
+          <div class="mb-6">
+            <h4 class="font-semibold mb-3 text-gray-700">Salary Range</h4>
+            <input type="range" min="0" max="200" value="100" class="w-full">
+            <div class="flex justify-between text-sm text-gray-600 mt-2"><span>$0K</span><span>$200K+</span></div>
+          </div>
+          <button class="btn-outline w-full py-2 rounded-lg font-medium">Clear Filters</button>
+        </div>
+      </div>
+      <div class="lg:col-span-2 space-y-4">
+        <div class="card p-6 cursor-pointer" onclick="showPage('job-details')">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-google text-blue-600 text-2xl"></i></div>
+            <div class="flex-1"><h3 class="font-bold text-xl text-gray-900 mb-1">Senior Product Designer</h3><p class="text-gray-600">Google Inc. • San Francisco, CA</p></div>
+            <i class="far fa-bookmark text-gray-400 hover:text-blue-600 text-xl"></i>
+          </div>
+          <p class="text-gray-600 mb-4">We are looking for a Senior Product Designer to join our team. You will be responsible for designing user experiences that are intuitive, accessible, and delightful...</p>
+          <div class="flex flex-wrap gap-2 mb-4"><span class="tag">Full-time</span><span class="tag">Remote</span><span class="tag">Senior</span><span class="tag">Figma</span></div>
+          <div class="flex items-center justify-between"><span class="text-2xl font-bold text-gray-900">$120K - $180K</span><span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 2 days ago</span></div>
+        </div>
+        <div class="card p-6 cursor-pointer" onclick="showPage('job-details')">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-airbnb text-purple-600 text-2xl"></i></div>
+            <div class="flex-1"><h3 class="font-bold text-xl text-gray-900 mb-1">UX Researcher</h3><p class="text-gray-600">Airbnb • Remote</p></div>
+            <i class="far fa-bookmark text-gray-400 hover:text-blue-600 text-xl"></i>
+          </div>
+          <p class="text-gray-600 mb-4">Join our research team to understand user needs and behaviors. Conduct interviews, usability tests, and analyze data to inform product decisions...</p>
+          <div class="flex flex-wrap gap-2 mb-4"><span class="tag">Full-time</span><span class="tag">Remote</span><span class="tag">Mid-level</span></div>
+          <div class="flex items-center justify-between"><span class="text-2xl font-bold text-gray-900">$95K - $140K</span><span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 3 days ago</span></div>
+        </div>
+        <div class="card p-6 cursor-pointer" onclick="showPage('job-details')">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-tesla text-red-600 text-2xl"></i></div>
+            <div class="flex-1"><h3 class="font-bold text-xl text-gray-900 mb-1">Software Engineer</h3><p class="text-gray-600">Tesla • Austin, TX</p></div>
+            <i class="far fa-bookmark text-gray-400 hover:text-blue-600 text-xl"></i>
+          </div>
+          <p class="text-gray-600 mb-4">Build cutting-edge software for electric vehicles and energy products. Work with Python, C++, and cloud infrastructure at scale...</p>
+          <div class="flex flex-wrap gap-2 mb-4"><span class="tag">Full-time</span><span class="tag">On-site</span><span class="tag">Senior</span><span class="tag">Python</span></div>
+          <div class="flex items-center justify-between"><span class="text-2xl font-bold text-gray-900">$140K - $220K</span><span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 1 week ago</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: JOB DETAILS -->
+<div id="job-details" class="page">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <button class="text-blue-600 font-medium mb-6 hover:text-blue-700" onclick="showPage('jobs')"><i class="fas fa-arrow-left mr-2"></i> Back to Jobs</button>
+    <div class="grid lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <div class="card p-8 mb-6">
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-20 h-20 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fab fa-google text-blue-600 text-3xl"></i></div>
+            <div class="flex-1">
+              <h1 class="text-3xl font-bold text-gray-900 mb-2">Senior Product Designer</h1>
+              <p class="text-xl text-gray-600 mb-2">Google Inc.</p>
+              <div class="flex flex-wrap gap-2"><span class="tag">Full-time</span><span class="tag">Remote</span><span class="tag">Senior Level</span></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 border-y border-gray-200 mb-6">
+            <div><div class="text-sm text-gray-500 mb-1">Location</div><div class="font-semibold text-gray-900">San Francisco, CA</div></div>
+            <div><div class="text-sm text-gray-500 mb-1">Salary</div><div class="font-semibold text-gray-900">$120K - $180K</div></div>
+            <div><div class="text-sm text-gray-500 mb-1">Experience</div><div class="font-semibold text-gray-900">5+ Years</div></div>
+            <div><div class="text-sm text-gray-500 mb-1">Posted</div><div class="font-semibold text-gray-900">2 days ago</div></div>
+          </div>
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Job Description</h2>
+            <p class="text-gray-700 mb-4">We are seeking a talented Senior Product Designer to join our innovative team at Google. You will be responsible for designing and delivering exceptional user experiences across our product suite.</p>
+            <p class="text-gray-700">As a Senior Product Designer, you will collaborate with cross-functional teams including product managers, engineers, and researchers to create intuitive, accessible, and delightful experiences for millions of users worldwide.</p>
+          </div>
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Key Responsibilities</h2>
+            <ul class="space-y-3 text-gray-700">
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Lead end-to-end design process from concept to launch</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Create wireframes, prototypes, and high-fidelity designs</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Conduct user research and usability testing</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Collaborate with engineering to ensure design feasibility</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Mentor junior designers and contribute to design system</span></li>
+            </ul>
+          </div>
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Requirements</h2>
+            <ul class="space-y-3 text-gray-700">
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>5+ years of experience in product design</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Proficiency in Figma, Sketch, or similar design tools</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Strong portfolio demonstrating UX/UI expertise</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Experience with design systems and component libraries</span></li>
+              <li class="flex gap-3"><i class="fas fa-check-circle text-blue-600 mt-1"></i><span>Excellent communication and collaboration skills</span></li>
+            </ul>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Benefits</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="flex items-center gap-3 text-gray-700"><i class="fas fa-heart text-blue-600"></i><span>Health, dental, and vision insurance</span></div>
+              <div class="flex items-center gap-3 text-gray-700"><i class="fas fa-laptop text-blue-600"></i><span>Remote work flexibility</span></div>
+              <div class="flex items-center gap-3 text-gray-700"><i class="fas fa-coins text-blue-600"></i><span>401(k) matching</span></div>
+              <div class="flex items-center gap-3 text-gray-700"><i class="fas fa-plane text-blue-600"></i><span>Unlimited PTO</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-1">
+        <div class="card p-6 sticky top-20">
+          <button class="btn-primary w-full py-3 rounded-lg font-semibold mb-4" onclick="alert('Application submitted successfully!')"><i class="fas fa-paper-plane mr-2"></i> Apply Now</button>
+          <button class="btn-outline w-full py-3 rounded-lg font-semibold mb-6"><i class="far fa-bookmark mr-2"></i> Save Job</button>
+          <div class="border-t border-gray-200 pt-6 mb-6">
+            <h3 class="font-bold text-gray-900 mb-4">About Google</h3>
+            <p class="text-gray-600 text-sm mb-4">Google is a global technology leader focused on improving the ways people connect with information.</p>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-2 text-gray-600"><i class="fas fa-globe text-blue-600"></i><span>google.com</span></div>
+              <div class="flex items-center gap-2 text-gray-600"><i class="fas fa-users text-blue-600"></i><span>10,000+ employees</span></div>
+            </div>
+          </div>
+          <div class="border-t border-gray-200 pt-6">
+            <h3 class="font-bold text-gray-900 mb-4">Share this job</h3>
+            <div class="flex gap-3">
+              <button class="w-10 h-10 bg-blue-600 text-white rounded-lg hover:bg-blue-700"><i class="fab fa-linkedin"></i></button>
+              <button class="w-10 h-10 bg-blue-400 text-white rounded-lg hover:bg-blue-500"><i class="fab fa-twitter"></i></button>
+              <button class="w-10 h-10 bg-gray-700 text-white rounded-lg hover:bg-gray-800"><i class="fas fa-link"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: APPLICATIONS -->
+<div id="applications" class="page">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">My Applications</h1>
+    <p class="text-gray-600 mb-8">Track and manage your job applications</p>
+    <div class="grid md:grid-cols-4 gap-4 mb-8">
+      <div class="card p-6 text-center"><div class="text-3xl font-bold text-blue-600 mb-1">12</div><div class="text-gray-600 text-sm">Total Applied</div></div>
+      <div class="card p-6 text-center"><div class="text-3xl font-bold text-yellow-600 mb-1">8</div><div class="text-gray-600 text-sm">In Review</div></div>
+      <div class="card p-6 text-center"><div class="text-3xl font-bold text-green-600 mb-1">3</div><div class="text-gray-600 text-sm">Interviews</div></div>
+      <div class="card p-6 text-center"><div class="text-3xl font-bold text-red-600 mb-1">1</div><div class="text-gray-600 text-sm">Rejected</div></div>
+    </div>
+    <div class="space-y-4">
+      <!-- Application 1 -->
+      <div class="card p-6">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-start gap-4 flex-1">
+            <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-google text-blue-600 text-2xl"></i></div>
+            <div><h3 class="font-bold text-lg text-gray-900 mb-1">Senior Product Designer</h3><p class="text-gray-600">Google Inc. • San Francisco, CA</p><div class="text-sm text-gray-500 mt-2">Applied 2 days ago</div></div>
+          </div>
+          <span class="badge-warning px-3 py-1 rounded-full text-sm font-medium">In Review</span>
+        </div>
+        <div class="flex gap-3">
+          <button class="btn-primary px-5 py-2 rounded-lg text-sm font-medium" onclick="showPage('job-details')">View Job</button>
+          <button class="btn-outline px-5 py-2 rounded-lg text-sm font-medium">Withdraw</button>
+        </div>
+      </div>
+      <!-- Application 2 -->
+      <div class="card p-6">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-start gap-4 flex-1">
+            <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-microsoft text-purple-600 text-2xl"></i></div>
+            <div><h3 class="font-bold text-lg text-gray-900 mb-1">Frontend Developer</h3><p class="text-gray-600">Microsoft • Seattle, WA</p><div class="text-sm text-gray-500 mt-2">Applied 5 days ago</div></div>
+          </div>
+          <span class="badge-success px-3 py-1 rounded-full text-sm font-medium">Interview Scheduled</span>
+        </div>
+        <div class="flex gap-3">
+          <button class="btn-primary px-5 py-2 rounded-lg text-sm font-medium" onclick="showPage('job-details')">View Job</button>
+          <button class="btn-outline px-5 py-2 rounded-lg text-sm font-medium">View Details</button>
+        </div>
+      </div>
+      <!-- Application 3 -->
+      <div class="card p-6">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-start gap-4 flex-1">
+            <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-spotify text-green-600 text-2xl"></i></div>
+            <div><h3 class="font-bold text-lg text-gray-900 mb-1">Data Scientist</h3><p class="text-gray-600">Spotify • New York, NY</p><div class="text-sm text-gray-500 mt-2">Applied 1 week ago</div></div>
+          </div>
+          <span class="badge-warning px-3 py-1 rounded-full text-sm font-medium">In Review</span>
+        </div>
+        <div class="flex gap-3">
+          <button class="btn-primary px-5 py-2 rounded-lg text-sm font-medium" onclick="showPage('job-details')">View Job</button>
+          <button class="btn-outline px-5 py-2 rounded-lg text-sm font-medium">Withdraw</button>
+        </div>
+      </div>
+      <!-- Application 4 - FIX: closing div was missing -->
+      <div class="card p-6">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-start gap-4 flex-1">
+            <div class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fab fa-tesla text-red-600 text-2xl"></i></div>
+            <div><h3 class="font-bold text-lg text-gray-900 mb-1">Software Engineer</h3><p class="text-gray-600">Tesla • Austin, TX</p><div class="text-sm text-gray-500 mt-2">Applied 2 weeks ago</div></div>
+          </div>
+          <span class="badge-danger px-3 py-1 rounded-full text-sm font-medium">Not Selected</span>
+        </div>
+        <div class="flex gap-3">
+          <button class="btn-primary px-5 py-2 rounded-lg text-sm font-medium" onclick="showPage('job-details')">View Job</button>
+          <button class="btn-outline px-5 py-2 rounded-lg text-sm font-medium">View Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: PROFILE -->
+<div id="profile" class="page">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
+    <p class="text-gray-600 mb-8">Manage your professional information</p>
+    <div class="grid lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-1">
+        <div class="card p-6 text-center">
+          <div class="w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl font-bold">JD</div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-1">John Doe</h2>
+          <p class="text-gray-600 mb-4">Senior Product Designer</p>
+          <button class="btn-outline w-full py-2 rounded-lg font-medium mb-6"><i class="fas fa-camera mr-2"></i> Change Photo</button>
+          <div class="border-t border-gray-200 pt-6 text-left">
+            <div class="flex items-center gap-3 mb-3 text-gray-600"><i class="fas fa-envelope text-blue-600 w-5"></i><span class="text-sm">john.doe@example.com</span></div>
+            <div class="flex items-center gap-3 mb-3 text-gray-600"><i class="fas fa-phone text-blue-600 w-5"></i><span class="text-sm">+1 (555) 123-4567</span></div>
+            <div class="flex items-center gap-3 text-gray-600"><i class="fas fa-map-marker-alt text-blue-600 w-5"></i><span class="text-sm">San Francisco, CA</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-2">
+        <div class="card p-8 mb-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-6">Personal Information</h3>
+          <form>
+            <div class="grid md:grid-cols-2 gap-4 mb-5">
+              <div><label class="block text-gray-700 font-medium mb-2">First Name</label><input type="text" class="form-input" value="John"></div>
+              <div><label class="block text-gray-700 font-medium mb-2">Last Name</label><input type="text" class="form-input" value="Doe"></div>
+            </div>
+            <div class="mb-5"><label class="block text-gray-700 font-medium mb-2">Professional Title</label><input type="text" class="form-input" value="Senior Product Designer"></div>
+            <div class="mb-5"><label class="block text-gray-700 font-medium mb-2">Bio</label><textarea class="form-input h-24">Passionate product designer with 8+ years of experience creating user-centered digital experiences.</textarea></div>
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+              <div><label class="block text-gray-700 font-medium mb-2">Email</label><input type="email" class="form-input" value="john.doe@example.com"></div>
+              <div><label class="block text-gray-700 font-medium mb-2">Phone</label><input type="tel" class="form-input" value="+1 (555) 123-4567"></div>
+            </div>
+            <button type="button" class="btn-primary px-6 py-3 rounded-lg font-semibold" onclick="alert('Profile updated successfully!')">Save Changes</button>
+          </form>
+        </div>
+        <div class="card p-8 mb-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-6">Experience</h3>
+          <div class="space-y-6">
+            <div class="border-l-4 border-blue-600 pl-4">
+              <h4 class="font-bold text-gray-900">Senior Product Designer</h4>
+              <p class="text-blue-600 font-medium mb-1">Tech Corp Inc.</p>
+              <p class="text-sm text-gray-500 mb-2">Jan 2020 - Present • 4 years</p>
+              <p class="text-gray-600 text-sm">Led design for flagship products serving 2M+ users. Increased user engagement by 45%.</p>
+            </div>
+            <div class="border-l-4 border-gray-300 pl-4">
+              <h4 class="font-bold text-gray-900">Product Designer</h4>
+              <p class="text-blue-600 font-medium mb-1">Startup XYZ</p>
+              <p class="text-sm text-gray-500 mb-2">Jun 2017 - Dec 2019 • 2.5 years</p>
+              <p class="text-gray-600 text-sm">Designed mobile and web applications from concept to launch.</p>
+            </div>
+          </div>
+          <button class="btn-outline px-5 py-2 rounded-lg font-medium mt-6"><i class="fas fa-plus mr-2"></i> Add Experience</button>
+        </div>
+        <div class="card p-8">
+          <h3 class="text-xl font-bold text-gray-900 mb-6">Skills</h3>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="tag">UI/UX Design</span><span class="tag">Figma</span><span class="tag">Design Systems</span>
+            <span class="tag">User Research</span><span class="tag">Prototyping</span><span class="tag">Adobe XD</span>
+            <span class="tag">HTML/CSS</span><span class="tag">Product Strategy</span>
+          </div>
+          <input type="text" class="form-input" placeholder="Add a skill and press Enter">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: SETTINGS -->
+<div id="settings" class="page">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
+    <p class="text-gray-600 mb-8">Manage your account preferences</p>
+    <div class="card p-8 mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-6">Notification Preferences</h3>
+      <div class="space-y-5">
+        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+          <div><div class="font-medium text-gray-900">Email Notifications</div><div class="text-sm text-gray-500">Receive email updates about your applications</div></div>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" checked><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition"></div><div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div></label>
+        </div>
+        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+          <div><div class="font-medium text-gray-900">Job Alerts</div><div class="text-sm text-gray-500">Get notified about new jobs matching your profile</div></div>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" checked><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition"></div><div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div></label>
+        </div>
+        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+          <div><div class="font-medium text-gray-900">Application Updates</div><div class="text-sm text-gray-500">Updates when employers view your application</div></div>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" checked><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition"></div><div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div></label>
+        </div>
+        <div class="flex items-center justify-between py-3">
+          <div><div class="font-medium text-gray-900">Marketing Emails</div><div class="text-sm text-gray-500">Receive newsletters and promotional content</div></div>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer"><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition"></div><div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div></label>
+        </div>
+      </div>
+    </div>
+    <div class="card p-8 mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-6">Privacy & Security</h3>
+      <div class="space-y-5">
+        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+          <div><div class="font-medium text-gray-900">Profile Visibility</div><div class="text-sm text-gray-500">Make your profile visible to employers</div></div>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" checked><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition"></div><div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div></label>
+        </div>
+        <div class="flex items-center justify-between py-3 border-b border-gray-100">
+          <div><div class="font-medium text-gray-900">Two-Factor Authentication</div><div class="text-sm text-gray-500">Add an extra layer of security</div></div>
+          <button class="btn-outline px-4 py-2 rounded-lg text-sm font-medium">Enable</button>
+        </div>
+        <div class="py-3"><button class="text-blue-600 font-medium hover:text-blue-700">Change Password</button></div>
+      </div>
+    </div>
+    <div class="card p-8">
+      <h3 class="text-xl font-bold text-gray-900 mb-6">Account</h3>
+      <div class="space-y-4">
+        <button class="btn-outline w-full py-3 rounded-lg font-medium text-left"><i class="fas fa-download mr-3"></i> Download My Data</button>
+        <button class="w-full py-3 rounded-lg font-medium text-left text-red-600 border-2 border-red-600 hover:bg-red-50 transition px-4"><i class="fas fa-trash mr-3"></i> Delete Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 mt-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-10 h-10 rounded-lg hero-gradient flex items-center justify-center"><i class="fas fa-briefcase text-white"></i></div>
+          <span class="text-xl font-bold text-white">JobPortal</span>
+        </div>
+        <p class="text-sm text-gray-400">Connecting talent with opportunity worldwide.</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-4">For Job Seekers</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a class="hover:text-white cursor-pointer" onclick="showPage('jobs')">Browse Jobs</a></li>
+          <li><a class="hover:text-white cursor-pointer" onclick="showPage('applications')">My Applications</a></li>
+          <li><a href="#" class="hover:text-white">Career Advice</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-4">For Employers</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white">Post a Job</a></li>
+          <li><a href="#" class="hover:text-white">Browse Candidates</a></li>
+          <li><a href="#" class="hover:text-white">Pricing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-4">Company</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white">About Us</a></li>
+          <li><a href="#" class="hover:text-white">Contact</a></li>
+          <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+      <p>&copy; 2024 JobPortal. All rights reserved.</p>
+      <div class="flex gap-4 mt-4 md:mt-0">
+        <a href="#" class="hover:text-white"><i class="fab fa-linkedin text-xl"></i></a>
+        <a href="#" class="hover:text-white"><i class="fab fa-twitter text-xl"></i></a>
+        <a href="#" class="hover:text-white"><i class="fab fa-facebook text-xl"></i></a>
+        <a href="#" class="hover:text-white"><i class="fab fa-instagram text-xl"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+ 
+<script>
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(pageId);
+    if (target) {
+      target.classList.add('active');
+    } else {
+      console.warn('Page not found:', pageId);
+    }
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+      if (link.dataset.page === pageId) link.classList.add('active');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+ 
+  function toggleMobileMenu() {
+    document.querySelector('.mobile-menu').classList.toggle('active');
+  }
+ 
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('fa-bookmark')) {
+      e.stopPropagation();
+      e.target.classList.toggle('far');
+      e.target.classList.toggle('fas');
+      e.target.classList.toggle('text-blue-600');
+    }
+  });
+</script>
+</body>
+</html>
